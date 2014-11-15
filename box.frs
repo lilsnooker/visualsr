@@ -1,0 +1,30 @@
+#version 150
+
+uniform float tick;
+uniform sampler2D texUnit;
+
+in float vZCoord;
+in vec4 vTest;
+
+out vec4 fragColor;
+in vec3 colorin;
+void main (void) {
+    vec2 xy = vTest.xy;
+    fragColor = vec4(abs(xy.y)*2.0, abs(sin(xy.y)*0.5+0.5), sin(xy.y*3.0)*0.5+0.5, 1.0);
+
+    // if (abs(vTest.x) > 0.4d && abs(vTest.y) > 0.47)
+    //     fragColor = vec4(1.0, 1.0, 1.0, 1.0);
+    // if (abs(vTest.z) > 0.47 && abs(vTest.y) > 0.47)
+    //     fragColor = vec4(1.0, 1.0, 1.0, 1.0);
+
+    if (abs(vTest.x) > 0.48 && abs(vTest.y) > 0.48)
+        fragColor = vec4(0.21, 0.1, 0.1, 1.0);
+
+    if (abs(vTest.x) > 0.48 && abs(vTest.z) > 0.48)
+        fragColor = vec4(0.21, 0.1, 0.1, 1.0);
+
+
+    if (abs(vTest.y) > 0.48 && abs(vTest.z) > 0.48)
+        fragColor = vec4(0.21, 0.1, 0.1, 1.0);
+
+}
