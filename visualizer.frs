@@ -1,0 +1,42 @@
+#version 130
+uniform float tick;
+uniform vec3 win;
+uniform sampler2D texUnit;
+
+out vec4 fragColor;
+
+void main(void)
+{
+    float w = win.x;
+    float h = win.y;
+
+    vec2 xy = gl_FragCoord.xy;
+
+    int len = 2048 / 32;
+    xy = vec2(xy.x*(float(len)/float(w)), xy.y*(float(len)/float(h)));
+    int offset = int(mod(xy.x, float(len)));
+
+    float dist = mod(xy.x, 1.0);
+    dist = abs(dist-0.5) * 2.4;
+
+    float test = texture(texUnit, vec2((float(offset)+0.5)/512.0, 0.5/4.0));
+    float testlast = texture(texUnit, vec2((float(offset)+0.5)/512.0, 1.5/4.0));
+
+
+    float eqHeight = 30.0;
+    if (xy.y <= test*eqHeight + cos(dist)) {
+        fragColor = vec4(sin(xy.y/20.0)*0.5+0.5, 0.2, 0.2, 1.0);
+    } else if (testlast > test && xy.y <= testlast*eqHeight + cos(dist)) {
+        fragColor = vec4(sin(xy.y/20.0)*0.5+0.5, 0.2, 0.2, 1.0);
+        fragColor -= vec4(vec3(0.2),0.0);
+    }
+
+    xy = vec2(gl_FragCoord.xy.x*(512.0/float(w)), gl_FragCoord.xy.y*(300.0/float(h)));
+    offset = int(mod(xy.x, 512.0));
+    float testa = texture(texUnit, vec2((float(offset)+0.5)/512.0, 2.5/4.0));
+    if (abs(50.0*testa+150-xy.y) < 6.0 && xy.x < 256.0*3.0) {
+        vec3 color = vec3(sin(xy.y/15.0)*0.25+0.5, sin((xy.y-200.0)/50.0+tick)*0.5+0.5, sin(tick+xy.y/14.0)*0.5+0.5);
+        color -= abs(50.0*testa+150.0-xy.y)*abs(50.0*testa+150.0-xy.y) / 132.0;
+        fragColor = vec4(color, 1.0);
+    }
+}
